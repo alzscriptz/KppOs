@@ -17,6 +17,7 @@ WORK = ROOT / "build" / "live-build-work"
 OUTPUT = ROOT / "dist" / "kahOS-amd64.iso"
 BRAVE_KEY_URL = "https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
 BRAVE_REPOSITORY = "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main\n"
+DEBIAN_SECURITY_REPOSITORY = "deb http://security.debian.org/debian-security trixie-security main contrib non-free non-free-firmware\n"
 
 
 def run(command: list[str], *, cwd: Path | None = None) -> None:
@@ -55,6 +56,18 @@ def create_live_build_config() -> None:
     (archives / "brave.key.binary").write_bytes(browser_key)
     (archives / "brave.list.chroot").write_text(BRAVE_REPOSITORY, encoding="utf-8")
     (archives / "brave.list.binary").write_text(BRAVE_REPOSITORY, encoding="utf-8")
+    # Ubuntu's bundled live-build defaults to the obsolete Debian security
+    # suite name `trixie/updates`; supply Debian 13's current suite directly.
+    for suffix in ("chroot", "binary"):
+        (archives / f"debian-security.list.{suffix}").write_text(DEBIAN_SECURITY_REPOSITORY, encoding="utf-8")
+
+    # live-build runs apt in a minimal chroot before it installs ca-certificates.
+    # Seed the runner's trusted roots so HTTPS package sources can validate.
+    host_ca_bundle = Path("/etc/ssl/certs/ca-certificates.crt")
+    if host_ca_bundle.is_file():
+        ca_bundle = includes / "etc" / "ssl" / "certs" / "ca-certificates.crt"
+        ca_bundle.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(host_ca_bundle, ca_bundle)
 
     packages = """\
 linux-image-amd64
@@ -142,6 +155,7 @@ def build_linux() -> None:
     WORK.mkdir(parents=True, exist_ok=True)
     config = [
         "lb", "config", "--mode", "debian", "--distribution", "trixie", "--architectures", "amd64",
+        "--security", "false",
         "--binary-images", "iso-hybrid", "--debian-installer", "live",
         "--archive-areas", "main contrib non-free non-free-firmware",
         "--iso-application", "kahOS Live Desktop", "--iso-volume", "KAHOS_LIVE",
