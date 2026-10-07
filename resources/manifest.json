@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "resources": [
+    { "id": "user-tahoe-dark-wallpaper", "path": "../assets/wallpapers/tahoe-dark-user.jpg", "type": "image/jpeg", "default": true },
+    { "id": "kahos-apple-logo", "path": "../assets/icons/kahos-logo-source.jpg", "type": "image/jpeg" }
+  ],
+  "install_root": "resources",
+  "auto_include": true
+}
