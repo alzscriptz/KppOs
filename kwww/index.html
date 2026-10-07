@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090d">
+  <meta name="description" content="kahOS — a lightweight desktop environment concept.">
+  <title>kahOS</title>
+  <link rel="icon" href="../assets/icons/kahos-logo-source.jpg">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <section class="boot-screen" id="bootScreen" aria-label="Starting kahOS">
+    <div class="boot-content">
+      <div class="boot-logo"><img src="../assets/icons/kahos-logo-source.jpg" alt="kahOS logo"></div>
+      <div class="boot-title">kahOS</div>
+      <div class="boot-track"><span id="bootProgress"></span></div>
+      <p id="bootStatus">Starting your workspace…</p>
+    </div>
+    <span class="boot-version">kahOS • Tahoe-inspired desktop</span>
+  </section>
+
+  <main class="desktop" id="desktop" aria-label="kahOS desktop">
+    <div class="wallpaper-shade"></div>
+    <header class="menubar">
+      <div class="menu-left">
+        <button class="menu-brand" id="appleMenuButton" aria-label="Open kahOS menu"><img src="../assets/icons/kahos-logo-source.jpg" alt=""></button>
+        <strong class="active-app-label" id="activeAppLabel">Finder</strong>
+        <button class="menu-item" data-menu="File">File</button>
+        <button class="menu-item" data-menu="Edit">Edit</button>
+        <button class="menu-item" data-menu="View">View</button>
+        <button class="menu-item" data-menu="Go">Go</button>
+        <button class="menu-item" data-menu="Window">Window</button>
+        <button class="menu-item" data-menu="Help">Help</button>
+      </div>
+      <div class="menubar-right">
+        <button class="status-icon" id="islandTrigger" aria-label="Open live activities" title="Live activities"><span class="status-dot"></span></button>
+        <button class="battery-button" id="batteryButton" title="Battery status preview"><span class="battery-icon"><i id="batteryFill"></i></span><span id="batteryPercent">84%</span></button>
+        <button class="status-icon" id="wifiButton" title="Wi-Fi"><svg viewBox="0 0 24 24"><path d="M2 8.8a15.5 15.5 0 0 1 20 0M5.5 12.3a10.2 10.2 0 0 1 13 0M9 15.8a5 5 0 0 1 6 0M12 19.2h.01"/></svg></button>
+        <button class="status-icon" id="controlCenterButton" title="Control Center"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="3.5"/><rect x="3" y="13" width="18" height="7" rx="3.5"/><path d="M9 7.5h.01M15 16.5h.01"/></svg></button>
+        <button class="clock-button" id="clockButton" aria-label="Open calendar"></button>
+      </div>
+    </header>
+
+    <section class="dynamic-island" id="dynamicIsland" aria-label="Live activity" tabindex="0">
+      <button class="island-collapsed" id="islandMainButton" aria-label="Expand live activity">
+        <span class="island-art"><span class="island-bars"><i></i><i></i><i></i><i></i></span></span>
+        <span class="island-now-playing">Now Playing</span>
+        <span class="island-wave"><i></i><i></i><i></i><i></i><i></i></span>
+      </button>
+      <div class="island-expanded">
+        <div class="activity-head"><span class="live-pulse"></span><span>NOW PLAYING</span><button id="islandClose" aria-label="Close live activity">×</button></div>
+        <div class="activity-body">
+          <div class="album-art"><span>♫</span></div>
+          <div class="track-meta"><strong id="trackTitle">Nothing playing</strong><span id="trackArtist">Add local audio in Wave</span><div class="track-progress"><span id="trackProgress"></span></div><div class="track-time"><span>0:00</span><span>0:00</span></div></div>
+          <div class="island-transport" aria-label="Playback controls"><button id="previousTrack" aria-label="Previous track">‹</button><button class="play-toggle" id="playToggle" aria-label="Play playback">▶</button><button id="nextTrack" aria-label="Next track">›</button></div>
+        </div>
+        <div class="island-footer"><span><span class="live-pulse"></span> Activity ready</span><button id="timerButton">Start 10 min timer</button></div>
+      </div>
+    </section>
+
+    <div class="desktop-shortcuts" aria-label="Desktop apps">
+      <button class="desktop-shortcut" data-open="finder"><span class="shortcut-icon finder-icon">◧</span><span>Macintosh HD</span></button>
+      <button class="desktop-shortcut" data-open="notes"><span class="shortcut-icon notes-icon">▤</span><span>Welcome</span></button>
+      <button class="desktop-shortcut" data-open="settings"><span class="shortcut-icon settings-icon">⚙</span><span>Settings</span></button>
+    </div>
+
+    <div class="desktop-widgets">
+      <div class="welcome-widget"><span class="widget-eyebrow">YOUR DESKTOP</span><strong>Make room<br>for what matters.</strong><button data-open="settings">Personalize <span>↗</span></button></div>
+    </div>
+
+    <div class="windows-layer" id="windowsLayer"></div>
+
+    <nav class="dock-wrap" aria-label="Dock">
+      <div class="dock" id="dock">
+        <button class="dock-app" data-open="finder" aria-label="Finder" title="Finder"><span class="dock-icon finder-icon"><img src="../assets/icons/finder.svg" alt=""></span></button>
+        <button class="dock-app" data-open="brave" aria-label="Brave Browser" title="Brave Browser"><span class="dock-icon brave-icon"><img src="../assets/icons/brave.svg" alt=""></span></button>
+        <button class="dock-app" data-open="notes" aria-label="Notes" title="Notes"><span class="dock-icon notes-icon"><img src="../assets/icons/notes.svg" alt=""></span></button>
+        <button class="dock-app" data-open="calendar" aria-label="Calendar" title="Calendar"><span class="dock-icon calendar-icon"><small id="dockWeekday">MON</small><b id="dockDay">06</b></span></button>
+        <button class="dock-app" data-open="photos" aria-label="Photos" title="Photos"><span class="dock-icon photos-icon"><img src="../assets/icons/photos.svg" alt=""></span></button>
+        <button class="dock-app" data-open="wave" aria-label="Wave music player" title="Wave · local music, no ads"><span class="dock-icon music-icon"><img src="../assets/icons/wave.svg" alt=""></span></button>
+        <button class="dock-app" data-open="terminal" aria-label="Terminals: macOS, Windows, and Linux" title="Terminals · macOS, Windows, Linux"><span class="dock-icon terminal-icon"><span>&gt;_</span><span class="terminal-mini-badges"><i class="badge-mac">A</i><i class="badge-win">⊞</i><i class="badge-linux">L</i></span></span></button>
+        <button class="dock-app" data-open="settings" aria-label="System Settings" title="System Settings"><span class="dock-icon settings-icon"><img src="../assets/icons/settings.svg" alt=""></span></button>
+        <span class="dock-divider"></span>
+        <button class="dock-app trash-app" data-open="trash" aria-label="Trash" title="Trash"><span class="dock-icon trash-icon"><img src="../assets/icons/finder.svg" alt=""></span></button>
+      </div>
+    </nav>
+
+    <div class="popover" id="menuPopover" hidden></div>
+    <div class="popover control-popover" id="controlPopover" hidden>
+      <div class="control-title">Control Center</div>
+      <button class="control-row" id="wifiToggle"><span class="control-symbol">⌁</span><span><b>Wi-Fi</b><small>kahOS Network</small></span><span class="toggle on"></span></button>
+      <button class="control-row" id="focusToggle"><span class="control-symbol">☾</span><span><b>Focus</b><small>Personal</small></span><span class="toggle"></span></button>
+      <div class="brightness-row"><span>☼</span><input type="range" min="35" max="100" value="85" aria-label="Brightness"></div>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+  </main>
+  <script src="./os.js" defer></script>
+</body>
+</html>
