@@ -78,7 +78,8 @@ def create_live_build_config() -> None:
     )
     if not package_filename:
         raise SystemExit("Brave package metadata has no download path.")
-    brave_deb = local_packages / "brave-browser.deb"
+    # live-build only picks up local debs named *_all.deb or *_$arch.deb
+    brave_deb = local_packages / "brave-browser_amd64.deb"
     with urllib.request.urlopen(
         "https://brave-browser-apt-release.s3.brave.com/" + package_filename, timeout=180
     ) as response, brave_deb.open("wb") as package_file:
@@ -135,7 +136,6 @@ xfce4-terminal
 xfce4-appfinder
 polkitd
 mousepad
-debian-installer-launcher
 sudo
 fonts-dejavu-core
 fonts-noto-color-emoji
@@ -203,7 +203,9 @@ def build_linux() -> None:
         "lb", "config", "--mode", "debian", "--distribution", "trixie", "--architectures", "amd64",
         "--security", "false",
         "--initsystem", "systemd",
-        "--binary-images", "iso-hybrid", "--debian-installer", "live",
+        # Skip embedding debian-installer: Ubuntu live-build still fetches the old
+        # dists/trixie/Contents-amd64.gz path which 404s on modern Debian mirrors.
+        "--binary-images", "iso-hybrid", "--debian-installer", "none",
         "--archive-areas", "main contrib non-free non-free-firmware",
         "--iso-application", "kahOS Live Desktop", "--iso-volume", "KAHOS_LIVE",
         "--bootappend-live", "boot=live components quiet splash",
