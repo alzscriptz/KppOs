@@ -84,8 +84,8 @@ def create_live_build_config() -> None:
     ) as response, brave_deb.open("wb") as package_file:
         shutil.copyfileobj(response, package_file)
 
-    (archives / "brave.key.chroot").write_bytes(browser_key)
-    (archives / "brave.key.binary").write_bytes(browser_key)
+    # Do not write brave.key.* files: live-build invokes apt-key for those, and
+    # apt-key is removed on current Debian/Ubuntu. Trust is via signed-by + keyring.
     (archives / "brave.list.chroot").write_text(BRAVE_REPOSITORY, encoding="utf-8")
     (archives / "brave.list.binary").write_text(BRAVE_REPOSITORY, encoding="utf-8")
     # Ubuntu's bundled live-build defaults to the obsolete Debian security
@@ -194,6 +194,9 @@ def validate() -> None:
 
 
 def build_linux() -> None:
+    # Clean previous live-build work so config/archives changes always apply.
+    if WORK.exists():
+        shutil.rmtree(WORK)
     create_live_build_config()
     WORK.mkdir(parents=True, exist_ok=True)
     config = [
