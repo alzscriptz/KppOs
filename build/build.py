@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import os
 import shutil
 import subprocess
@@ -47,11 +48,42 @@ def create_live_build_config() -> None:
 
     package_lists = WORK / "config" / "package-lists"
     archives = WORK / "config" / "archives"
+    local_packages = WORK / "config" / "packages.chroot"
     includes = WORK / "config" / "includes.chroot"
     package_lists.mkdir(parents=True, exist_ok=True)
     archives.mkdir(parents=True, exist_ok=True)
+    local_packages.mkdir(parents=True, exist_ok=True)
 
     browser_key = urllib.request.urlopen(BRAVE_KEY_URL, timeout=60).read()
+    # Resolve Brave from its signed repository metadata, then let live-build
+    # install this local package while Debian apt resolves its dependencies.
+    # This avoids relying on live-build to index a third-party apt source.
+    packages_index = urllib.request.urlopen(
+        "https://brave-browser-apt-release.s3.brave.com/dists/stable/main/binary-amd64/Packages.gz",
+        timeout=120,
+    ).read()
+    brave_package = next(
+        (
+            block
+            for block in gzip.decompress(packages_index).decode("utf-8").split("\n\n")
+            if "Package: brave-browser\n" in block and "Architecture: amd64\n" in block
+        ),
+        None,
+    )
+    if brave_package is None:
+        raise SystemExit("Brave repository metadata has no amd64 brave-browser package.")
+    package_filename = next(
+        (line.split(": ", 1)[1] for line in brave_package.splitlines() if line.startswith("Filename: ")),
+        None,
+    )
+    if not package_filename:
+        raise SystemExit("Brave package metadata has no download path.")
+    brave_deb = local_packages / "brave-browser.deb"
+    with urllib.request.urlopen(
+        "https://brave-browser-apt-release.s3.brave.com/" + package_filename, timeout=180
+    ) as response, brave_deb.open("wb") as package_file:
+        shutil.copyfileobj(response, package_file)
+
     (archives / "brave.key.chroot").write_bytes(browser_key)
     (archives / "brave.key.binary").write_bytes(browser_key)
     (archives / "brave.list.chroot").write_text(BRAVE_REPOSITORY, encoding="utf-8")
@@ -91,7 +123,6 @@ xfce4-terminal
 xfce4-appfinder
 polkitd
 mousepad
-brave-browser
 debian-installer-launcher
 sudo
 fonts-dejavu-core
