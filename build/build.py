@@ -101,12 +101,21 @@ def create_live_build_config() -> None:
         ca_bundle.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(host_ca_bundle, ca_bundle)
 
-    # Explicitly request the systemd flavour of live-config so apt does not
-    # pull live-config-sysvinit / sysvinit-core (conflicts with systemd-sysv).
+    # Block the sysvinit live-config flavour so apt cannot choose it over systemd.
+    preferences = includes / "etc" / "apt" / "preferences.d" / "no-sysvinit.pref"
+    preferences.parent.mkdir(parents=True, exist_ok=True)
+    preferences.write_text(
+        "Package: live-config-sysvinit sysvinit-core initscripts sysv-rc\n"
+        "Pin: release *\n"
+        "Pin-Priority: -1\n",
+        encoding="utf-8",
+    )
+
+    # systemd init only — do not list the live-config meta package, which can
+    # still resolve to the sysvinit flavour during lb_chroot_live-packages.
     packages = """\
 linux-image-amd64
 live-boot
-live-config
 live-config-systemd
 systemd-sysv
 xserver-xorg
@@ -190,6 +199,7 @@ def build_linux() -> None:
     config = [
         "lb", "config", "--mode", "debian", "--distribution", "trixie", "--architectures", "amd64",
         "--security", "false",
+        "--initsystem", "systemd",
         "--binary-images", "iso-hybrid", "--debian-installer", "live",
         "--archive-areas", "main contrib non-free non-free-firmware",
         "--iso-application", "kahOS Live Desktop", "--iso-volume", "KAHOS_LIVE",
