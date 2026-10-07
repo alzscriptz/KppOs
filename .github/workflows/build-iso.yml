@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            ca-certificates debootstrap live-build xorriso squashfs-tools \
+            ca-certificates debian-archive-keyring debootstrap live-build xorriso squashfs-tools \
             grub-pc-bin grub-efi-amd64-bin mtools gpg curl
 
       - name: Build the bootable ISO
