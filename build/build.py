@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "build" / "live-build-work"
 OUTPUT = ROOT / "dist" / "kahOS-amd64.iso"
 BRAVE_KEY_URL = "https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
-BRAVE_REPOSITORY = "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main\n"
+BRAVE_REPOSITORY = "deb [arch=amd64 signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main\n"
 DEBIAN_SECURITY_REPOSITORY = "deb http://security.debian.org/debian-security trixie-security main contrib non-free non-free-firmware\n"
 
 
@@ -89,7 +89,7 @@ thunar
 thunar-volman
 xfce4-terminal
 xfce4-appfinder
-policykit-1
+polkitd
 mousepad
 brave-browser
 debian-installer-launcher
