@@ -30,6 +30,26 @@ jobs:
             ca-certificates debian-archive-keyring debootstrap live-build xorriso squashfs-tools \
             grub-pc-bin grub-efi-amd64-bin mtools gpg curl
 
+      - name: Fix Ubuntu live-build index path for Debian Trixie
+        run: |
+          sudo python3 - <<'PY'
+          from pathlib import Path
+
+          helper = Path("/usr/lib/live/build/lb_chroot_linux-image")
+          text = helper.read_text(encoding="utf-8")
+          replacements = {
+              "${LB_PARENT_MIRROR_CHROOT}/dists/${LB_PARENT_DISTRIBUTION}/Contents-${LB_ARCHITECTURES}.gz":
+                  "${LB_PARENT_MIRROR_CHROOT}/dists/${LB_PARENT_DISTRIBUTION}/main/Contents-${LB_ARCHITECTURES}.gz",
+              "${LB_MIRROR_CHROOT}/dists/${LB_DISTRIBUTION}/Contents-${LB_ARCHITECTURES}.gz":
+                  "${LB_MIRROR_CHROOT}/dists/${LB_DISTRIBUTION}/main/Contents-${LB_ARCHITECTURES}.gz",
+          }
+          for old, new in replacements.items():
+              text = text.replace(old, new)
+          if "/main/Contents-${LB_ARCHITECTURES}.gz" not in text:
+              raise SystemExit("Could not apply Debian Trixie Contents index path patch")
+          helper.write_text(text, encoding="utf-8")
+          PY
+
       - name: Build the bootable ISO
         run: sudo python3 build/build.py --inside-linux
 
