@@ -1,4 +1,4 @@
-name: Build kahOS ISO and upload to GoFile
+name: Build kahOS ISO
 
 on:
   workflow_dispatch:
@@ -13,15 +13,6 @@ jobs:
     steps:
       - name: Check out KppOs
         uses: actions/checkout@v4
-
-      - name: Require the GoFile API secret
-        env:
-          GOFILE_API_TOKEN: ${{ secrets.GOFILE_API_TOKEN }}
-        run: |
-          if [ -z "$GOFILE_API_TOKEN" ]; then
-            echo "Add GOFILE_API_TOKEN as a repository Actions secret before starting the ISO build."
-            exit 1
-          fi
 
       - name: Install Debian Live build tools
         run: |
@@ -53,10 +44,12 @@ jobs:
       - name: Build the bootable ISO
         run: sudo python3 build/build.py --inside-linux
 
-      - name: Upload the ISO to GoFile
-        env:
-          GOFILE_API_TOKEN: ${{ secrets.GOFILE_API_TOKEN }}
-        run: |
-          result="$(python3 scripts/upload_iso_gofile.py --path dist/kahOS-amd64.iso)"
-          printf '%s\n' "$result"
-          printf '%s\n' "$result" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kahOS-amd64
+          path: |
+            dist/kahOS-amd64.iso
+            dist/kahOS-amd64.iso.sha256
+          if-no-files-found: error
+          retention-days: 14
