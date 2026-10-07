@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "mode": "debian-live-iso",
+  "brand": "kahOS",
+  "splash": "../kwww/index.html#boot",
+  "startup_phases": [
+    "Checking startup disk",
+    "Loading desktop services",
+    "Preparing your workspace"
+  ],
+  "native_bootloader": "GRUB via Debian Live",
+  "native_kernel": "Debian amd64 Linux kernel",
+  "live_desktop": "XFCE with auto-login and Brave kiosk session",
+  "installer": "Debian Live installer launcher"
+}
