@@ -1,0 +1,26 @@
+{
+  "name": "kahOS",
+  "version": "0.6.0",
+  "display_name": "kahOS Tahoe-inspired desktop",
+  "logo": "../assets/icons/kahos-logo-source.jpg",
+  "desktop_entry": "../kwww/index.html",
+  "browser": "Brave Browser",
+  "wallpaper_default": "../assets/wallpapers/tahoe-dark-user.jpg",
+  "design_goals": {
+    "lightweight": true,
+    "runtime_frameworks": 0,
+    "offline_shell": true,
+    "reduced_motion": true
+  },
+  "implementation_status": "browser desktop shell packaged in a Debian 13 live ISO; OS-level services and native app integrations are still limited",
+  "iso_base": "Debian 13 trixie Live with XFCE, Brave, and the kahOS desktop shell",
+  "iso_output": "dist/kahOS-amd64.iso",
+  "native_os_roadmap": [
+    "Apple Account and supported iCloud services",
+    "Native application framework and app catalog",
+    "OS-level Live Activities service",
+    "Native macOS-style, PowerShell, and bash terminal sessions",
+    "Evaluate .exe compatibility through a Windows compatibility layer",
+    "Replace simulated system controls with native Linux services"
+  ]
+}
