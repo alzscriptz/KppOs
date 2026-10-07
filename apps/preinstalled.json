@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "apps": [
+    { "id": "finder", "name": "Finder", "kind": "built-in", "entry": "../kwww/index.html#finder", "icon": "../assets/icons/finder.svg" },
+    { "id": "brave", "name": "Brave Browser", "kind": "web-shortcut", "entry": "https://search.brave.com/", "default_browser": true, "icon": "../assets/icons/brave.svg" },
+    { "id": "notes", "name": "Notes", "kind": "built-in", "entry": "../kwww/index.html#notes", "icon": "../assets/icons/notes.svg" },
+    { "id": "calendar", "name": "Calendar", "kind": "built-in", "entry": "../kwww/index.html#calendar", "icon": "../assets/icons/calendar.svg" },
+    { "id": "photos", "name": "Photos", "kind": "built-in", "entry": "../kwww/index.html#photos", "icon": "../assets/icons/photos.svg" },
+    { "id": "wave", "name": "Wave", "kind": "built-in", "entry": "../kwww/index.html#wave", "icon": "../assets/icons/wave.svg", "description": "Ad-free local music library" },
+    { "id": "settings", "name": "System Settings", "kind": "built-in", "entry": "../kwww/index.html#settings", "icon": "../assets/icons/settings.svg" },
+    { "id": "terminal", "name": "Terminal", "kind": "preview", "entry": "../kwww/index.html#terminal", "icon": "../assets/icons/terminal.svg", "profiles": ["macOS zsh", "Windows PowerShell", "Linux bash"] }
+  ]
+}
