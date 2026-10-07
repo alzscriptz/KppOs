@@ -101,10 +101,13 @@ def create_live_build_config() -> None:
         ca_bundle.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(host_ca_bundle, ca_bundle)
 
+    # Explicitly request the systemd flavour of live-config so apt does not
+    # pull live-config-sysvinit / sysvinit-core (conflicts with systemd-sysv).
     packages = """\
 linux-image-amd64
 live-boot
 live-config
+live-config-systemd
 systemd-sysv
 xserver-xorg
 xfce4-session
