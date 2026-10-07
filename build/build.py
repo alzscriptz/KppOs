@@ -141,7 +141,7 @@ def build_linux() -> None:
     create_live_build_config()
     WORK.mkdir(parents=True, exist_ok=True)
     config = [
-        "lb", "config", "--distribution", "trixie", "--architectures", "amd64",
+        "lb", "config", "--mode", "debian", "--distribution", "trixie", "--architectures", "amd64",
         "--binary-images", "iso-hybrid", "--debian-installer", "live",
         "--archive-areas", "main contrib non-free non-free-firmware",
         "--iso-application", "kahOS Live Desktop", "--iso-volume", "KAHOS_LIVE",
