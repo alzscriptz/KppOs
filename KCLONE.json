@@ -1,0 +1,27 @@
+{
+  "name": "kahOs",
+  "type": "os",
+  "version": 4,
+  "ai_project_aware": true,
+  "mcp_project_aware": true,
+  "targets": ["iso"],
+  "workspace": {
+    "root": ".",
+    "asset_tree": "assets",
+    "resource_tree": "resources",
+    "build_tree": "build",
+    "artifact_tree": "dist"
+  },
+  "ai": {
+    "config": ".kclone/ai/config.json"
+  },
+  "mcp": {
+    "config": ".kclone/mcp/servers.json"
+  },
+  "vm": {
+    "memory_mb": 3072,
+    "cpus": 2,
+    "disk_gb": 32,
+    "enable_3d": true
+  }
+}

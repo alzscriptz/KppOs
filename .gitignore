@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.kclone/
+/dist/
+/artifacts/
+/build/live-build-work/
+*.iso
+*.iso.sha256
+.env
+.env.*
+!.env.example
